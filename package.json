@@ -1,15 +1,14 @@
 {
-  "name": "newsnow",
+  "name": "newsnow-ai",
   "type": "module",
-  "version": "0.0.39",
+  "version": "0.1.0",
   "private": true,
   "packageManager": "pnpm@10.30.3",
   "author": {
-    "url": "https://github.com/ourongxing/",
-    "email": "orongxing@gmail.com",
-    "name": "ourongxing"
+    "url": "https://github.com/eiden/",
+    "name": "eiden"
   },
-  "homepage": "https://github.com/ourongxing/newsnow",
+  "homepage": "https://github.com/chenpeng9/newsnow-ai",
   "scripts": {
     "dev": "npm run presource && vite dev",
     "build": "npm run presource && vite build && node -e \"require('fs').symlinkSync('../../public', 'dist/output/server/chunks/public', 'dir')\"",
@@ -21,7 +20,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.app.json",
     "release": "bumpp",
     "prepare": "simple-git-hooks",
-    "log": "wrangler pages deployment tail --project-name newsnow",
+    "log": "wrangler pages deployment tail --project-name newsnow-ai",
     "test": "vitest -c vitest.config.ts"
   },
   "dependencies": {
@@ -116,6 +115,7 @@
       "@swc/core",
       "esbuild",
       "better-sqlite3",
+      "oxc-parser",
       "sharp",
       "simple-git-hooks",
       "unrs-resolver",

@@ -10,11 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as IntelIndexRouteImport } from './routes/intel/index'
 import { Route as CColumnRouteImport } from './routes/c.$column'
+import { Route as IntelDigestIdRouteImport } from './routes/intel/digest.$id'
+import { Route as IntelDailyDateRouteImport } from './routes/intel/daily.$date'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntelIndexRoute = IntelIndexRouteImport.update({
+  id: '/intel/',
+  path: '/intel/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CColumnRoute = CColumnRouteImport.update({
@@ -22,31 +30,64 @@ const CColumnRoute = CColumnRouteImport.update({
   path: '/c/$column',
   getParentRoute: () => rootRouteImport,
 } as any)
+const IntelDigestIdRoute = IntelDigestIdRouteImport.update({
+  id: '/intel/digest/$id',
+  path: '/intel/digest/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntelDailyDateRoute = IntelDailyDateRouteImport.update({
+  id: '/intel/daily/$date',
+  path: '/intel/daily/$date',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/c/$column': typeof CColumnRoute
+  '/intel/': typeof IntelIndexRoute
+  '/intel/daily/$date': typeof IntelDailyDateRoute
+  '/intel/digest/$id': typeof IntelDigestIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/c/$column': typeof CColumnRoute
+  '/intel': typeof IntelIndexRoute
+  '/intel/daily/$date': typeof IntelDailyDateRoute
+  '/intel/digest/$id': typeof IntelDigestIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/c/$column': typeof CColumnRoute
+  '/intel/': typeof IntelIndexRoute
+  '/intel/daily/$date': typeof IntelDailyDateRoute
+  '/intel/digest/$id': typeof IntelDigestIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/c/$column'
+  fullPaths:
+    | '/'
+    | '/c/$column'
+    | '/intel/'
+    | '/intel/daily/$date'
+    | '/intel/digest/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/c/$column'
-  id: '__root__' | '/' | '/c/$column'
+  to: '/' | '/c/$column' | '/intel' | '/intel/daily/$date' | '/intel/digest/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/c/$column'
+    | '/intel/'
+    | '/intel/daily/$date'
+    | '/intel/digest/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CColumnRoute: typeof CColumnRoute
+  IntelIndexRoute: typeof IntelIndexRoute
+  IntelDailyDateRoute: typeof IntelDailyDateRoute
+  IntelDigestIdRoute: typeof IntelDigestIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,11 +99,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/intel/': {
+      id: '/intel/'
+      path: '/intel'
+      fullPath: '/intel/'
+      preLoaderRoute: typeof IntelIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/c/$column': {
       id: '/c/$column'
       path: '/c/$column'
       fullPath: '/c/$column'
       preLoaderRoute: typeof CColumnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intel/digest/$id': {
+      id: '/intel/digest/$id'
+      path: '/intel/digest/$id'
+      fullPath: '/intel/digest/$id'
+      preLoaderRoute: typeof IntelDigestIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/intel/daily/$date': {
+      id: '/intel/daily/$date'
+      path: '/intel/daily/$date'
+      fullPath: '/intel/daily/$date'
+      preLoaderRoute: typeof IntelDailyDateRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -71,6 +133,9 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CColumnRoute: CColumnRoute,
+  IntelIndexRoute: IntelIndexRoute,
+  IntelDailyDateRoute: IntelDailyDateRoute,
+  IntelDigestIdRoute: IntelDigestIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

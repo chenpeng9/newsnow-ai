@@ -2,35 +2,35 @@
 
 [English](./README.md) | [简体中文](README.zh-CN.md) | 日本語
 
+> **Note**: This project is based on the excellent [NewsNow](https://github.com/ourongxing/newsnow) by ourongxing. We've added significant AI-powered features and continue to evolve it. Thank you for the great foundation!
+
 > [!NOTE]
 > 本バージョンはデモ版であり、現在中国語のみ対応しています。カスタマイズ機能や英語コンテンツをサポートした正式版は後日リリース予定です。
 
 ***リアルタイムで最新のニュースをエレガントに読む***
 
 ## 機能
+
+### 基本機能
 - 最適な読書体験のためのクリーンでエレガントなUIデザイン
 - トレンドニュースのリアルタイム更新
 - GitHub OAuthログインとデータ同期
 - デフォルトのキャッシュ期間は30分（ログインユーザーは強制更新可能）
 - リソース使用を最適化し、IPブロックを防ぐためのソース更新頻度に基づく適応型スクレイピング間隔（最短2分）
-- MCPサーバーをサポート
 
-```json
-{
-  "mcpServers": {
-    "newsnow": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "newsnow-mcp-server"
-      ],
-      "env": {
-        "BASE_URL": "https://newsnow.busiyi.world"
-      }
-    }
-  }
-}
-```
+### AI インテリジェンスハブ 🤖
+- **3層スマートフィルタリング**：
+  - L1 ヒューリスティックフィルター：低品質コンテンツ（広告、プロモーション、重複）を削除
+  - L2 セマンティック重複排除：Ollama (bge-m3) による意味的類似度分析
+  - L3 AI スコアリング：DeepSeek API によるニューススコアリング（0-100）
+- **毎日ブリーフィング**：毎日08:30に高品質ニュース要約を自動生成・送信
+- **マルチチャネルプッシュ」：Feishu、WeCom 通知をサポート
+- **ソース分類」：品質と更新頻度に基づく4つのカテゴリー（A/B/C/D）
+
+### デプロイオプション
+- **Docker ワンクリックデプロイ**：Ollama ベクトルデータベース内蔵、すぐに使用可能
+- **Cloudflare Pages**：D1 データベースサポート
+- **Vercel/Bun**：複数のデプロイ選択肢
 
 ## デプロイ
 
@@ -95,13 +95,8 @@ pnpm dev
 ### データソースの追加
 `shared/sources` と `server/sources` ディレクトリを参照。プロジェクトは完全な型定義とクリーンなアーキテクチャを提供します。
 
-## ロードマップ
-- **多言語サポート**の追加（英語、中国語、その他言語を順次対応）
-- **パーソナライズオプション**の改善（カテゴリ別ニュース、保存された設定）
-- **データソース**の拡充による多言語対応のグローバルニュースカバレッジ
-
 ## コントリビューション
 コントリビューションを歓迎します！機能リクエストやバグレポートのために、プルリクエストやイシューの作成をお気軽にどうぞ。
 
 ## ライセンス
-MIT © ourongxing
+MIT © eiden

@@ -1,10 +1,10 @@
-# Contributing to NewsNow
+# Contributing to NewsNow-AI
 
-Thank you for considering contributing to NewsNow! This document provides guidelines and instructions for contributing to the project.
+Thank you for considering contributing to NewsNow-AI! This document provides guidelines and instructions for contributing to the project.
 
 ## Adding a New Source
 
-NewsNow is built to be easily extensible with new sources. Here's a step-by-step guide on how to add a new source:
+NewsNow-AI is built to be easily extensible with new sources. Here's a step-by-step guide on how to add a new source:
 
 ### 1. Create a Feature Branch
 

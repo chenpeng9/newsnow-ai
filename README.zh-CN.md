@@ -2,37 +2,34 @@
 
 [English](./README.md) | 简体中文 | [日本語](README.ja-JP.md)
 
+> **说明**: 本项目基于优秀的 [NewsNow](https://github.com/ourongxing/newsnow) 项目（作者 ourongxing）进行二次开发。我们在原有基础上增加了大量 AI 驱动的功能并持续迭代中。感谢原作者提供的优秀基础！
+
 ***优雅地阅读实时热门新闻***
 
 > [!NOTE]
 > 当前版本为 DEMO，仅支持中文。正式版将提供更好的定制化功能和英文内容支持。
->
 
 ## 功能特性
+
+### 基础功能
 - 优雅的阅读界面设计，实时获取最新热点新闻
 - 支持 GitHub 登录及数据同步
 - 默认缓存时长为 30 分钟，登录用户可强制刷新获取最新数据
 - 根据内容源更新频率动态调整抓取间隔（最快每 2 分钟），避免频繁抓取导致 IP 被封禁
-- 支持 MCP server
 
-```json
-{
-  "mcpServers": {
-    "newsnow": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "newsnow-mcp-server"
-      ],
-      "env": {
-        "BASE_URL": "https://newsnow.busiyi.world"
-      }
-    }
-  }
-}
-```
+### AI 情报管家 🤖
+- **三层智能过滤系统**：
+  - L1 启发式过滤：移除低质量内容（广告、推广、重复）
+  - L2 语义去重：使用 Ollama (bge-m3) 进行语义相似度分析
+  - L3 AI 评分：使用 DeepSeek API 为新闻打分（0-100）
+- **每日简报**：每天 08:30 自动生成并发送高质量新闻摘要
+- **多渠道推送**：支持飞书、企业微信推送
+- **分类管理**：A/B/C/D 四类信源，按质量和更新频率分类
 
-你可以将 `BASE_URL` 修改为你的域名。
+### 部署方式
+- **Docker 一键部署**：内置 Ollama 向量数据库，开箱即用
+- **Cloudflare Pages**：支持 D1 数据库
+- **Vercel/Bun**：多种部署选择
 
 ## 部署指南
 
@@ -94,21 +91,9 @@ pnpm dev
 
 你可能想要添加数据源，请关注 `shared/sources` `server/sources`，项目类型完备，结构简单，请自行探索。
 
-## 路线图
-- 添加 **多语言支持**（英语、中文，更多语言即将推出）
-- 改进 **个性化选项**（基于分类的新闻、保存的偏好设置）
-- 扩展 **数据源** 以涵盖多种语言的全球新闻
-
 ## 贡献指南
 欢迎贡献代码！您可以提交 pull request 或创建 issue 来提出功能请求和报告 bug
 
 ## License
 
-[MIT](./LICENSE) © ourongxing
-
-## 赞赏
-如果本项目对你有所帮助，可以给小猫买点零食。如果需要定制或者其他帮助，请通过下列方式联系备注。
-
-![](./screenshots/reward.gif)
-
-<a href="https://hellogithub.com/repository/c2978695e74a423189e9ca2543ab3b36" target="_blank"><img src="https://api.hellogithub.com/v1/widgets/recommend.svg?rid=c2978695e74a423189e9ca2543ab3b36&claim_uid=SMJiFwlsKCkWf89&theme=small" alt="Featured｜HelloGitHub" /></a>
+[MIT](./LICENSE) © eiden

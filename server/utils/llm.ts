@@ -1,9 +1,9 @@
 import { myFetch } from "./fetch"
 import { fetchArticleContent } from "./article"
 
-const IFLOW_API_KEY = process.env.IFLOW_API_KEY
-const IFLOW_BASE_URL = process.env.IFLOW_BASE_URL || "https://apis.iflow.cn/v1"
-const IFLOW_MODEL = process.env.IFLOW_MODEL || "kimi-k2-0905"
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY
+const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/v1"
+const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat"
 
 interface LLMMessage {
   role: "system" | "user"
@@ -20,23 +20,23 @@ interface LLMResponse {
 }
 
 /**
- * Call iFlow API (Kimi) to score a news item
+ * Call DeepSeek API to score a news item
  */
 export async function callLLM(
   messages: LLMMessage[]
 ): Promise<string> {
-  if (!IFLOW_API_KEY) {
-    throw new Error("IFLOW_API_KEY is not set")
+  if (!DEEPSEEK_API_KEY) {
+    throw new Error("DEEPSEEK_API_KEY is not set")
   }
 
-  const response = await myFetch(`${IFLOW_BASE_URL}/chat/completions`, {
+  const response = await myFetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${IFLOW_API_KEY}`,
+      Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
     },
     body: {
-      model: IFLOW_MODEL,
+      model: DEEPSEEK_MODEL,
       messages,
       temperature: 0.3,
       max_tokens: 1000,
@@ -46,7 +46,7 @@ export async function callLLM(
   const data = response as LLMResponse
 
   if (!data.choices || data.choices.length === 0) {
-    throw new Error("No response from iFlow API")
+    throw new Error("No response from DeepSeek API")
   }
 
   return data.choices[0].message.content
@@ -78,20 +78,26 @@ export async function scoreWithAI(
 
 评分标准（总分100分）：
 
-1. AI 认知增长 (权重 40%)：
-- 是否涉及 AI 产业链重大变动（如芯片、模型更新、算力、应用落地）？
-- 是否能帮助初学者理解核心概念（如 AGI、RAG、Scaling Laws）？
-- 评分：单纯的营销软文 0-10 分；行业里程碑事件（如 GPT-5 发布、Nvidia 财报） 35-40 分。
+1. AI 认知增长：
+评估核心：是否涉及底层技术突破（Scaling Laws、模型架构）、产业链巨变（芯片、算力）或杀手级应用落地。
+评分参考：
+10-30分：公关稿、常规软件更新、噱头大于实质的新闻。
+40-70分：重要财报数据、主流模型小版本迭代、行业标准制定。
+80-100分：里程碑式突破（如 GPT-5 级别发布）、物理层/架构层颠覆、AGI 关键节点。
 
-2. 市场温度感知 (权重 30%)：
-- 是否包含宏观指标（降息、非农、通胀数据）？
-- 是否涉及行业板块轮动或具有投资参考价值的财务信号？
-- 评分：常规市场波动 5-10 分；足以影响理财决策或改变市场预期的重要转折点 25-30 分。
+2. 市场温度感知：
+评估核心：对二级市场、宏观经济政策（利率、就业、通胀）及行业板块轮动的直接驱动力。
+评分参考：
+10-30分：日常股价波动、无实质影响的分析师评论。
+40-70分：宏观经济关键指标发布、大型并购传闻、行业资本流向显著变化。
+80-100分：足以改变市场预期的政策转折点（如降息周期开启）、引发市场情绪剧烈变动的黑天鹅或灰犀牛事件。
 
-3. 世界格局观测 (权重 30%)：
-- 是否揭示了国际局势（地缘冲突、大国博弈）或重大政策调整？
-- 是否影响社会生产力结构或全球供应链？
-- 评分：区域性小新闻 0-10 分；影响全球政经大势的节点性事件 25-30 分。
+3. 世界格局观测：
+评估核心：是否影响地缘政治博弈、全球供应链安全、社会生产力结构或国家级 AI 战略。
+评分参考：
+10-30分：区域性政策微调、短期外交辞令。
+40-70分：大国间的技术禁令、核心供应链转移、重大劳动力市场变革预警。
+80-100分：改变全球格局的条约或冲突、主权 AI 竞争的质变、足以写入历史的政经节点。
 
 分类标准：
 - AI动态：涉及 AI 产业链、模型更新、芯片、算力、应用落地、AGI、大模型等

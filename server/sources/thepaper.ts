@@ -18,7 +18,10 @@ export default defineSource(async () => {
         title: k.name,
         url: `https://www.thepaper.cn/newsDetail_forward_${k.contId}`,
         mobileUrl: `https://m.thepaper.cn/newsDetail_forward_${k.contId}`,
-        extra: { info: "澎湃新闻" },
+        extra: {
+          info: "澎湃新闻",
+          date: Number(k.pubTimeLong) || 0,
+        },
       }
     })
 })

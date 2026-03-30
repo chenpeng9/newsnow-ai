@@ -11,13 +11,10 @@ export const intelCategories = {
     interval: 30 * 60 * 1000, // 30 min
     sources: [
       // Financial - Core
-      "sputniknewscn",  // 卫星通讯社
       "wallstreetcn-hot", // 华尔街见闻 - 热门
       "cls-depth",       // 财联社 - 深度
-      "ifeng",          // 凤凰网
       "thepaper",       // 澎湃新闻
-      "tencent-hot",    // 腾讯新闻
-      "juejin",         // 稀土掘金
+      "sputniknewscn",  // 卫星通讯社
     ],
   },
   B: {
@@ -31,7 +28,9 @@ export const intelCategories = {
       "wallstreetcn-quick", // 华尔街见闻 - 快讯
       "fastbull-express", // 法布财经 - 快讯
       "cankaoxiaoxi",   // 参考消息
-
+      "juejin",         // 稀土掘金
+      "tencent-hot",    // 腾讯新闻
+      "ifeng",          // 凤凰网
     ],
   },
   C: {

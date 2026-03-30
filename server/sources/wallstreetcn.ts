@@ -77,7 +77,10 @@ const hot = defineSource(async () => {
         id: h.id,
         title: h.title!,
         url: h.uri,
-        extra: { info: "华尔街见闻" },
+        extra: {
+          info: "华尔街见闻",
+          date: h.display_time * 1000,
+        },
       }
     })
 })

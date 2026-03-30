@@ -30,7 +30,15 @@ interface WapRes {
       name: string
       source: string
       type: string
-      articleList: any[]
+      articleList: {
+        id: string
+        title: string
+        desc: string
+        publish_time: string
+        link_info: {
+          url: string
+        }
+      }[]
       article_count: number
       sub_tab: string
     }[]
@@ -55,6 +63,7 @@ const comprehensiveNews = defineSource(async () => {
     extra: {
       info: "腾讯新闻",
       hover: news.desc,
+      date: news.publish_time,
     },
   }))
 })

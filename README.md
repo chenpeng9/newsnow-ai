@@ -2,6 +2,8 @@
 
 English | [简体中文](README.zh-CN.md) | [日本語](README.ja-JP.md)
 
+> **Note**: This project is based on the excellent [NewsNow](https://github.com/ourongxing/newsnow) by ourongxing. We've added significant AI-powered features and continue to evolve it. Thank you for the great foundation!
+
 > [!NOTE]
 > This is a demo version currently supporting Chinese only. A full-featured version with better customization and English content support will be released later.
 
@@ -9,30 +11,26 @@ English | [简体中文](README.zh-CN.md) | [日本語](README.ja-JP.md)
 
 ## Features
 
+### Core Features
 - Clean and elegant UI design for optimal reading experience
 - Real-time updates on trending news
 - GitHub OAuth login with data synchronization
 - 30-minute default cache duration (logged-in users can force refresh)
 - Adaptive scraping interval (minimum 2 minutes) based on source update frequency to optimize resource usage and prevent IP bans
-- support MCP server
 
-```json
-{
-  "mcpServers": {
-    "newsnow": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "newsnow-mcp-server"
-      ],
-      "env": {
-        "BASE_URL": "https://newsnow.busiyi.world"
-      }
-    }
-  }
-}
-```
-You can change the `BASE_URL` to your own domain.
+### AI Intelligence Hub 🤖
+- **Three-Layer Smart Filtering**:
+  - L1 Heuristic Filter: Remove low-quality content (ads, promotions, duplicates)
+  - L2 Semantic Deduplication: Use Ollama (bge-m3) for semantic similarity analysis
+  - L3 AI Scoring: Score news (0-100) using DeepSeek API
+- **Daily Briefing**: Automatically generate and send high-quality news summaries at 08:30 daily
+- **Multi-Channel Push**: Support Feishu and WeCom notifications
+- **Source Classification**: Four categories (A/B/C/D) based on quality and update frequency
+
+### Deployment Options
+- **Docker One-Click Deployment**: Built-in Ollama vector database, ready to use
+- **Cloudflare Pages**: With D1 database support
+- **Vercel/Bun**: Multiple deployment choices
 
 ## Deployment
 
@@ -109,12 +107,6 @@ Refer to `shared/sources` and `server/sources` directories. The project provides
 
 For detailed instructions on how to add new sources, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## Roadmap
-
-- Add **multi-language support** (English, Chinese, more to come).
-- Improve **personalization options** (category-based news, saved preferences).
-- Expand **data sources** to cover global news in multiple languages.
-
 **_release when ready_**
 ![](https://testmnbbs.oss-cn-zhangjiakou.aliyuncs.com/pic/20250328172146_rec_.gif?x-oss-process=base_webp)
 
@@ -126,4 +118,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines on how to contrib
 
 ## License
 
-[MIT](./LICENSE) © ourongxing
+[MIT](./LICENSE) © eiden

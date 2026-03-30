@@ -1,9 +1,9 @@
 import type { NewsItem } from "~/shared/types"
 import { heuristicFilter } from "./filter-l1"
 import { deduplicate, filterByTimeWindow } from "./filter-l2"
-import { scoreItems, getHighValueItems, type ScoredItem } from "./filter-l3"
+import { scoreItems, getHighValueItems, type ScoredItem, type AICategory } from "./filter-l3"
 
-export { type ScoredItem }
+export { type ScoredItem, type AICategory }
 
 /**
  * Process items through filter layers
