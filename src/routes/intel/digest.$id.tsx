@@ -207,11 +207,6 @@ function DigestDetailComponent() {
                                     {formatPublishDate(item)}
                                   </span>
                                 </div>
-                                {item.aiSummary && (
-                                  <p className="text-xs text-neutral-500 mt-1 line-clamp-2">
-                                    {item.aiSummary}
-                                  </p>
-                                )}
                               </a>
                             </div>
                           )

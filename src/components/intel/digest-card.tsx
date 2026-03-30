@@ -12,8 +12,8 @@ export interface Digest {
       title: string
       url: string
       aiScore: number
-      aiSummary?: string
-      aiComment?: string
+      aiCategory?: string
+      articleContent?: string
       pubDate?: number
       extra?: { info?: string; date?: number }
     }>
@@ -22,8 +22,8 @@ export interface Digest {
       title: string
       url: string
       aiScore: number
-      aiSummary?: string
-      aiComment?: string
+      aiCategory?: string
+      articleContent?: string
       pubDate?: number
       extra?: { info?: string; date?: number }
     }>
@@ -32,8 +32,8 @@ export interface Digest {
       title: string
       url: string
       aiScore: number
-      aiSummary?: string
-      aiComment?: string
+      aiCategory?: string
+      articleContent?: string
       pubDate?: number
       extra?: { info?: string; date?: number }
     }>

@@ -7,10 +7,12 @@ interface PushedNewsRow {
   pushed_at: number
   score: number
   source: string
+  ai_category?: AICategory
+  article_content?: string
+  digest_id?: string
+  // Keep old fields for backward compatibility with existing data
   ai_summary?: string
   ai_comment?: string
-  ai_category?: AICategory
-  digest_id?: string
 }
 
 export interface DigestRow {
@@ -108,6 +110,10 @@ export class PushedNews {
       await this.db.prepare(`ALTER TABLE pushed_news ADD COLUMN digest_id TEXT`).run()
       logger.info(`Added digest_id column to pushed_news table`)
     }
+    if (!columnNames.has('article_content')) {
+      await this.db.prepare(`ALTER TABLE pushed_news ADD COLUMN article_content TEXT`).run()
+      logger.info(`Added article_content column to pushed_news table`)
+    }
 
     // Create digests table
     await this.db.prepare(`
@@ -135,13 +141,12 @@ export class PushedNews {
     if (!url) return
 
     const source = (item as any).extra?.info || ""
-    const aiSummary = item.aiSummary || ""
-    const aiComment = item.aiComment || ""
     const aiCategory = item.aiCategory || ""
+    const articleContent = item.articleContent || ""
 
     await this.db.prepare(
-      `INSERT OR REPLACE INTO pushed_news (url, title, pushed_at, score, source, ai_summary, ai_comment, ai_category) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    ).run(url, (item as any).title || "", now, item.aiScore || 0, source, aiSummary, aiComment, aiCategory)
+      `INSERT OR REPLACE INTO pushed_news (url, title, pushed_at, score, source, ai_category, article_content) VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).run(url, (item as any).title || "", now, item.aiScore || 0, source, aiCategory, articleContent)
   }
 
   /**
@@ -344,9 +349,8 @@ export class PushedNews {
         date: row.pushed_at,
       },
       aiScore: row.score,
-      aiSummary: row.ai_summary,
-      aiComment: row.ai_comment,
       aiCategory: row.ai_category,
+      articleContent: row.article_content,
     } as ScoredItem
   }
 

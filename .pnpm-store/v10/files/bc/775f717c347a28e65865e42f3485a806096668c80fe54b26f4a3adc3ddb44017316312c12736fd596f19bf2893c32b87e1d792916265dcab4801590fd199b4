@@ -1,0 +1,29 @@
+{
+  "name": "favicons-scraper",
+  "version": "1.3.2",
+  "description": "A fully-typed api wrapper for a favicon scraper",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "keywords": [
+    "Favicon",
+    "scraper",
+    "logos",
+    "images"
+  ],
+  "homepage": "https://github.com/harvmaster/sdk.favicons-scraper#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/harvmaster/sdk.favicons-scraper.git"
+  },
+  "author": "Harvmaster <hzuccon@gmail.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  },
+  "files": [
+    "dist/*"
+  ]
+}

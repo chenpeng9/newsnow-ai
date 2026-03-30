@@ -1,4 +1,4 @@
-import type { ScoredItem } from "../intel/filter"
+import type { ScoredItem } from "../intel/filter-l3"
 import { intelCategories } from "@shared/intel-categories"
 import { getters } from "../getters"
 import { processIntel } from "../intel/filter"
@@ -174,7 +174,7 @@ function buildFeishuDigestCard(digest: { title: string; summary: string; date: s
       header: {
         title: {
           tag: "plain_text",
-          content: `📰 今日 AI 情报汇总`,
+          content: digest.title,
         },
         template: "blue",
       },
@@ -183,7 +183,7 @@ function buildFeishuDigestCard(digest: { title: string; summary: string; date: s
           tag: "div",
           text: {
             tag: "lark_md",
-            content: `**${digest.date}**\n\n${digest.summary}`,
+            content: digest.summary,
           },
         },
         {
@@ -212,12 +212,9 @@ function buildFeishuDigestCard(digest: { title: string; summary: string; date: s
  * Build WeCom markdown content for digest
  */
 function buildWeComDigestContent(digest: { title: string; summary: string; date: string; digestUrl: string }): string {
-  return `📰 今日 AI 情报汇总
-${digest.date}
+  return `${digest.summary}
 
-${digest.summary}
-
-🔗 阅读全文: ${digest.digestUrl}
+<a href="${digest.digestUrl}">点击阅读全文</a>
 
 ---
 由 早8🌞晚8🌛 AI推送`
@@ -365,9 +362,8 @@ export async function sendTestBriefing(): Promise<void> {
       pubDate: Date.now() - 3600000,
       extra: { info: "华尔街见闻" },
       aiScore: 95,
-      aiSummary: "GPT-5 在推理能力和多模态理解上实现质的飞跃，被视为通向 AGI 的关键一步",
-      aiComment: "关注算力赛道",
       aiCategory: "AI动态",
+      articleContent: "OpenAI 今日正式发布 GPT-5，在推理能力和多模态理解上实现质的飞跃，被视为通向 AGI 的关键一步。",
     } as any,
     {
       id: "2",
@@ -376,9 +372,8 @@ export async function sendTestBriefing(): Promise<void> {
       pubDate: Date.now() - 7200000,
       extra: { info: "金十数据" },
       aiScore: 88,
-      aiSummary: "数据中心业务同比增长 400%，AI 芯片供不应求局面将持续至 2027 年",
-      aiComment: "持续看好芯片股",
       aiCategory: "AI动态",
+      articleContent: "英伟达 Q4 财报显示数据中心业务同比增长 400%，AI 芯片供不应求局面将持续至 2027 年。",
     } as any,
     {
       id: "3",
@@ -387,9 +382,8 @@ export async function sendTestBriefing(): Promise<void> {
       pubDate: Date.now() - 1800000,
       extra: { info: "科技日报" },
       aiScore: 85,
-      aiSummary: "GPT-5 在复杂推理任务中表现卓越，图像和文本理解能力显著增强",
-      aiComment: "技术突破值得期待",
       aiCategory: "AI动态",
+      articleContent: "GPT-5 在复杂推理任务中表现卓越，图像和文本理解能力显著增强。",
     } as any,
     {
       id: "4",
@@ -398,9 +392,8 @@ export async function sendTestBriefing(): Promise<void> {
       pubDate: Date.now() - 1800000,
       extra: { info: "财联社" },
       aiScore: 85,
-      aiSummary: "通胀数据持续降温，鲍威尔释放鸽派信号，风险资产全线上涨",
-      aiComment: "关注成长股机会",
       aiCategory: "财经市场",
+      articleContent: "通胀数据持续降温，鲍威尔释放鸽派信号，风险资产全线上涨。",
     } as any,
     {
       id: "5",
@@ -409,9 +402,8 @@ export async function sendTestBriefing(): Promise<void> {
       pubDate: Date.now() - 10800000,
       extra: { info: "参考消息" },
       aiScore: 85,
-      aiSummary: "美国拟对华实施更严格芯片出口限制，国产替代进程加速",
-      aiComment: "关注国产替代",
       aiCategory: "全球视点",
+      articleContent: "美国拟对华实施更严格芯片出口限制，国产替代进程加速。",
     } as any,
     {
       id: "6",
@@ -420,9 +412,8 @@ export async function sendTestBriefing(): Promise<void> {
       pubDate: Date.now() - 14400000,
       extra: { info: "澎湃新闻" },
       aiScore: 82,
-      aiSummary: "全球首个全面 AI 监管框架落地，对大模型训练数据提出更高透明度要求",
-      aiComment: "合规成本上升",
       aiCategory: "全球视点",
+      articleContent: "全球首个全面 AI 监管框架落地，对大模型训练数据提出更高透明度要求。",
     } as any,
   ]
 

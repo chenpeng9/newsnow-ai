@@ -1,5 +1,5 @@
 import { myFetch } from "./fetch"
-import type { ScoredItem } from "../intel/filter"
+import type { ScoredItem } from "../intel/filter-l3"
 
 const FEISHU_WEBHOOK = process.env.FEISHU_WEBHOOK
 const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK
@@ -45,13 +45,6 @@ export async function sendFeishuAlert(item: ScoredItem): Promise<void> {
           text: {
             tag: "lark_md",
             content: `**${item.title}**`,
-          },
-        },
-        {
-          tag: "div",
-          text: {
-            tag: "lark_md",
-            content: `💡 **价值摘要**: ${item.aiSummary || "暂无摘要"}`,
           },
         },
         {
@@ -107,14 +100,8 @@ export async function sendDiscordAlert(item: ScoredItem): Promise<void> {
         description: item.title,
         color: 0xff6600, // Orange
         url: item.url,
-        fields: [
-          {
-            name: "💡 价值摘要",
-            value: item.aiSummary || "暂无摘要",
-          },
-        ],
         footer: {
-          text: "AI 情报管家",
+          text: `来源: ${item.extra?.info || "金十数据"}`,
         },
         timestamp: new Date().toISOString(),
       },
@@ -149,10 +136,6 @@ export async function sendWeComAlert(item: ScoredItem): Promise<void> {
       content: `🔔 AI情报高能预警 [${item.aiScore}分]
 
 ${item.title}
-
-💡 ${item.aiSummary || "暂无摘要"}
-
-💬 ${item.aiComment || "无点评"}
 
 来源: ${item.extra?.info || "金十数据"} | 发布时间: ${item.pubDate || "未知"}
 

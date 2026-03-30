@@ -16,7 +16,7 @@ services:
       - G_CLIENT_ID=${G_CLIENT_ID}
       - G_CLIENT_SECRET=${G_CLIENT_SECRET}
       - JWT_SECRET=${JWT_SECRET}
-      - INIT_TABLE=false
+      - INIT_TABLE=${INIT_TABLE:-true}
       - ENABLE_CACHE=true
       - OLLAMA_BASE_URL=http://ollama:11434
       - OLLAMA_EMBEDDING_MODEL=${OLLAMA_EMBEDDING_MODEL:-bge-m3}

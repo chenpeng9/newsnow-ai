@@ -1,7 +1,7 @@
 import { getAlertItems } from "../../intel/filter"
 import { getters } from "#/getters"
 import { sendAlerts } from "../../utils/notify"
-import type { NewsItem } from "~/shared/types"
+import type { NewsItem } from "@shared/types"
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)

@@ -1,10 +1,16 @@
-import type { ScoredItem, AICategory } from "./filter"
-import { callLLM } from "../utils/llm"
+import type { ScoredItem } from "./filter-l3"
+import type { AICategory } from "../utils/llm"
+import { generateCategoryDigest, generatePushSummary } from "../utils/llm"
 
 export interface DigestOutput {
   title: string
   content: string
   summary: string
+  categories: {
+    AI动态: ScoredItem[]
+    财经市场: ScoredItem[]
+    全球视点: ScoredItem[]
+  }
 }
 
 export interface DigestInput {
@@ -24,106 +30,72 @@ function generateDigestId(date: string): string {
 }
 
 /**
- * Format news item for AI prompt
+ * Generate digest content for a single category
  */
-function formatNewsItem(item: ScoredItem, index: number): string {
-  const source = item.extra?.info || "未知来源"
-  return `[${index}] **${item.title}** (来源: ${source}, 分数: ${item.aiScore})
-摘要: ${item.aiSummary || "无"}
-点评: ${item.aiComment || "无"}`
+async function generateCategoryContent(
+  category: AICategory,
+  items: ScoredItem[]
+): Promise<string> {
+  // Prepare items for LLM
+  const itemsForLLM = items.map((item: ScoredItem) => ({
+    title: item.title,
+    url: item.url,
+    aiScore: item.aiScore,
+    articleContent: item.articleContent,
+    extra: item.extra?.info ? { info: String(item.extra.info) } : undefined,
+  }))
+
+  return await generateCategoryDigest(category, itemsForLLM)
 }
 
 /**
- * Call DeepSeek API to generate digest article
+ * Generate full digest content by processing each category separately
  */
 async function generateDigestContent(input: DigestInput): Promise<{
   title: string
   content: string
-  summary: string
 }> {
   const { aiDynamics, financeMarket, globalPerspectives, date } = input
 
-  // Build news items by category
-  const aiItems = aiDynamics.map((item, i) => formatNewsItem(item, i + 1)).join("\n\n")
-  const financeItems = financeMarket.map((item, i) => formatNewsItem(item, i + 1)).join("\n\n")
-  const globalItems = globalPerspectives.map((item, i) => formatNewsItem(item, i + 1)).join("\n\n")
-
-  const systemPrompt = `你是一位专业的科技财经编辑。请根据以下新闻生成一篇汇总文章。
-
-要求：
-1. 文章分为三个部分：AI动态、财经市场、全球视点
-2. 每个部分用 2-3 个段落总结当天最重要的新闻，进行事实性归纳和串联
-3. 使用事实陈述，避免主观评论
-4. 提到具体的新闻事件时，标注来源序号 [1][2][3]
-5. 总字数控制在 800-1000 字
-6. 使用 Markdown 格式输出
-
-输出格式：
-# {title}
-
-## AI动态
-{content}
-
-## 财经市场
-{content}
-
-## 全球视点
-{content}
-
-最后，请生成一段 200 字以内的推送摘要，格式为：
-摘要: {summary}`
-
-  let userPrompt = `日期: ${date}\n\n`
+  // Generate each category separately (only if has items)
+  const sections: string[] = []
 
   if (aiDynamics.length > 0) {
-    userPrompt += `### AI动态 (${aiDynamics.length}条)\n${aiItems}\n\n`
+    const aiContent = await generateCategoryContent("AI动态", aiDynamics)
+    sections.push(`## AI动态\n\n${aiContent}`)
   }
 
   if (financeMarket.length > 0) {
-    userPrompt += `### 财经市场 (${financeMarket.length}条)\n${financeItems}\n\n`
+    const financeContent = await generateCategoryContent("财经市场", financeMarket)
+    sections.push(`## 财经市场\n\n${financeContent}`)
   }
 
   if (globalPerspectives.length > 0) {
-    userPrompt += `### 全球视点 (${globalPerspectives.length}条)\n${globalItems}\n\n`
+    const globalContent = await generateCategoryContent("全球视点", globalPerspectives)
+    sections.push(`## 全球视点\n\n${globalContent}`)
   }
 
-  userPrompt += "请根据以上新闻生成汇总文章："
+  // Generate title and combine content
+  const title = `${date} AI 情报汇总`
+  const content = `# ${title}\n\n${sections.join("\n\n")}`
 
-  try {
-    const result = await callLLM([
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ])
-
-    // Parse the response
-    const summaryMatch = result.match(/摘要:\s*(.+)/s)
-    const summary = summaryMatch ? summaryMatch[1].trim() : result.slice(0, 200)
-
-    // Generate title
-    const title = `${date} AI 情报汇总`
-
-    return {
-      title,
-      content: result,
-      summary,
-    }
-  } catch (error) {
-    console.error("[Digest] Failed to generate digest content:", error)
-    throw error
-  }
+  return { title, content }
 }
 
 /**
  * Main function to generate digest
  */
 export async function generateDigest(input: DigestInput): Promise<DigestOutput & { id: string }> {
-  const { date } = input
+  const { date, aiDynamics, financeMarket, globalPerspectives } = input
   const id = generateDigestId(date)
 
   console.log("[Digest] Generating digest for date:", date)
 
-  // Generate digest content using AI
-  const { title, content, summary } = await generateDigestContent(input)
+  // Generate digest content by category
+  const { title, content } = await generateDigestContent(input)
+
+  // Generate push summary separately
+  const summary = await generatePushSummary(content)
 
   console.log("[Digest] Generated digest:", {
     id,
@@ -137,6 +109,11 @@ export async function generateDigest(input: DigestInput): Promise<DigestOutput &
     title,
     content,
     summary,
+    categories: {
+      AI动态: aiDynamics,
+      财经市场: financeMarket,
+      全球视点: globalPerspectives,
+    },
   }
 }
 

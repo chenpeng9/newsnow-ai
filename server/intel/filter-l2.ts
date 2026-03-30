@@ -1,4 +1,4 @@
-import type { NewsItem } from "~/shared/types"
+import type { NewsItem } from "@shared/types"
 import { getEmbedding, cosineSimilarity } from "../utils/ollama"
 
 const SIMILARITY_THRESHOLD = 0.85

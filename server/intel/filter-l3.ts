@@ -1,4 +1,4 @@
-import type { NewsItem } from "~/shared/types"
+import type { NewsItem } from "@shared/types"
 import { scoreWithAI } from "../utils/llm"
 
 const HIGH_VALUE_THRESHOLD = 70
@@ -7,14 +7,13 @@ export type AICategory = "AI动态" | "财经市场" | "全球视点"
 
 export interface ScoredItem extends NewsItem {
   aiScore: number
-  aiSummary?: string
-  aiComment?: string
   aiCategory?: AICategory
+  articleContent?: string  // Cached article content from L3 fetching
 }
 
 /**
  * Score news items using AI (L3 layer)
- * Returns items with their AI scores, summaries and comments
+ * Returns items with their AI scores and categories
  */
 export async function scoreItems(items: NewsItem[]): Promise<ScoredItem[]> {
   const results: ScoredItem[] = []
@@ -24,13 +23,12 @@ export async function scoreItems(items: NewsItem[]): Promise<ScoredItem[]> {
     const item = items[i]
     const source = (item as any).extra?.info || "未知来源"
     try {
-      const { score, summary, comment, category } = await scoreWithAI(item.title, item.url)
+      const { score, category, articleContent } = await scoreWithAI(item.title, item.url)
       results.push({
         ...item,
         aiScore: score,
-        aiSummary: summary,
-        aiComment: comment,
         aiCategory: category,
+        articleContent,
       })
 
       // Log each item's score with source info
@@ -45,9 +43,8 @@ export async function scoreItems(items: NewsItem[]): Promise<ScoredItem[]> {
       results.push({
         ...item,
         aiScore: 0,
-        aiSummary: "无法生成摘要",
-        aiComment: "无点评",
         aiCategory: undefined,
+        articleContent: undefined,
       })
     }
   }

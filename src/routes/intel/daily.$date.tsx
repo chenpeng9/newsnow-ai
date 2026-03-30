@@ -105,18 +105,6 @@ function DailyComponent() {
                               </span>
                             </h3>
 
-                            {item.aiSummary && (
-                              <p className="text-sm text-neutral-600 dark:text-neutral-400 mb-2 line-clamp-3">
-                                💡 {item.aiSummary}
-                              </p>
-                            )}
-
-                            {item.aiComment && (
-                              <p className="text-sm text-neutral-500 dark:text-neutral-500 mb-3">
-                                💬 {item.aiComment}
-                              </p>
-                            )}
-
                             <div className="text-xs text-neutral-500 dark:text-neutral-500 flex gap-2">
                               {item.extra?.info && (
                                 <span>来源：{item.extra.info}</span>

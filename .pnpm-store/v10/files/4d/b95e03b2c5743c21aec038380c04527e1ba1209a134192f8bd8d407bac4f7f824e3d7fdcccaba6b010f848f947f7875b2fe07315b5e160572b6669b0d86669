@@ -1,0 +1,12 @@
+interface StartPatchOptions {
+    name: string;
+    yes?: boolean;
+    sourceDir?: string;
+    build?: boolean;
+    pack?: boolean;
+    pnpmOptions?: string[];
+}
+declare function startPatch(options: StartPatchOptions): Promise<void>;
+
+export { startPatch };
+export type { StartPatchOptions };

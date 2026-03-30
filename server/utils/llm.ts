@@ -5,6 +5,8 @@ const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY
 const DEEPSEEK_BASE_URL = process.env.DEEPSEEK_BASE_URL || "https://api.deepseek.com/v1"
 const DEEPSEEK_MODEL = process.env.DEEPSEEK_MODEL || "deepseek-chat"
 
+export type AICategory = "AI动态" | "财经市场" | "全球视点"
+
 interface LLMMessage {
   role: "system" | "user"
   content: string
@@ -53,22 +55,22 @@ export async function callLLM(
 }
 
 /**
- * Generate AI score and summary for a single news item
+ * Generate AI score for a single news item
  * Fetches article content first, then scores using both title and content
- * Returns score (0-100), summary (100 chars), comment (20 chars), and category
+ * Returns score (0-100), category, and cached article content
  */
 export async function scoreWithAI(
   title: string,
   url: string,
   options: { fetchContent?: boolean } = {}
-): Promise<{ score: number; summary: string; comment: string; category?: "AI动态" | "财经市场" | "全球视点" }> {
+): Promise<{ score: number; category?: AICategory; articleContent?: string }> {
   const fetchContent = options.fetchContent !== false // default to true
 
   // Fetch article content for better scoring
-  let content = ""
+  let articleContent = ""
   if (fetchContent) {
     try {
-      content = (await fetchArticleContent(url)) || ""
+      articleContent = (await fetchArticleContent(url)) || ""
     } catch (error) {
       console.error("[LLM] Failed to fetch content:", error)
     }
@@ -106,14 +108,14 @@ export async function scoreWithAI(
 
 返回格式要求：
 请严格按照以下JSON格式返回，不要有任何额外文字：
-{"score": 85, "summary": "150字左右的摘要，说明这条信息的核心价值和意义", "comment": "30字以内的简短点评或行动建议", "category": "AI动态"}`
+{"score": 85, "category": "AI动态"}`
 
   // Build user prompt with or without content
   let userPrompt = `标题：${title}\n链接：${url}`
-  if (content) {
-    userPrompt += `\n\n正文内容：\n${content.slice(0, 3000)}` // Limit content to 3000 chars
+  if (articleContent) {
+    userPrompt += `\n\n正文内容：\n${articleContent.slice(0, 3000)}` // Limit content to 3000 chars
   }
-  userPrompt += "\n\n请给出评分、摘要和点评："
+  userPrompt += "\n\n请给出评分和分类："
 
   try {
     const result = await callLLM([
@@ -125,24 +127,22 @@ export async function scoreWithAI(
     const jsonMatch = result.match(/\{[\s\S]*\}/)
     if (!jsonMatch) {
       console.error("[LLM] Invalid JSON response:", result)
-      return { score: 0, summary: "无法生成摘要", comment: "无点评" }
+      return { score: 0, articleContent }
     }
 
     const parsed = JSON.parse(jsonMatch[0])
     const score = parseInt(String(parsed.score), 10)
-    const summary = (parsed.summary || "").slice(0, 200)
-    const comment = (parsed.comment || "").slice(0, 30)
-    const category = parsed.category as "AI动态" | "财经市场" | "全球视点" | undefined
+    const category = parsed.category as AICategory | undefined
 
     if (Number.isNaN(score) || score < 0 || score > 100) {
       console.error("[LLM] Invalid score response:", result)
-      return { score: 0, summary: "无法生成摘要", comment: "无点评" }
+      return { score: 0, articleContent }
     }
 
-    return { score, summary, comment, category }
+    return { score, category, articleContent }
   } catch (error) {
     console.error("[LLM] Failed to score item:", error)
-    return { score: 0, summary: "无法生成摘要", comment: "无点评" }
+    return { score: 0, articleContent }
   }
 }
 
@@ -153,9 +153,91 @@ export async function scoreWithAI(
 export async function batchScoreWithAI(
   items: Array<{ title: string; url: string }>,
   options: { fetchContent?: boolean } = {}
-): Promise<Array<{ score: number; summary: string; comment: string }>> {
+): Promise<Array<{ score: number; category?: AICategory; articleContent?: string }>> {
   const promises = items.map((item) =>
     scoreWithAI(item.title, item.url, options)
   )
   return Promise.all(promises)
+}
+
+/**
+ * Generate digest for a single category
+ * @param category Category name
+ * @param items All items in this category (with cached article content)
+ * @returns Digest content for this category (max 500 chars)
+ */
+export async function generateCategoryDigest(
+  category: AICategory,
+  items: Array<{
+    title: string
+    url: string
+    aiScore: number
+    articleContent?: string
+    extra?: { info?: string }
+  }>
+): Promise<string> {
+  // Build prompt with all items in this category
+  const itemsText = items.map((item, index) => {
+    const source = item.extra?.info || "未知来源"
+    let text = `[${index + 1}] **${item.title}** (来源: ${source}, 分数: ${item.aiScore})\n`
+    if (item.articleContent) {
+      text += `内容: ${item.articleContent}\n`
+    }
+    return text
+  }).join("\n")
+
+  const systemPrompt = `你是一位专业的科技财经编辑。请根据以下新闻生成该分类的摘要。
+
+要求：
+1. 用 2-3 个段落总结该分类当天最重要的新闻，进行事实性归纳和串联
+2. 使用事实陈述，避免主观评论
+3. 提到具体的新闻事件时，标注来源序号 [1][2][3]
+4. 总字数控制在 500 字内
+5. 使用 Markdown 格式输出`
+
+  const userPrompt = `分类: ${category}\n\n新闻列表:\n${itemsText}\n\n请生成该分类的摘要：`
+
+  try {
+    const result = await callLLM([
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ])
+
+    return result.trim()
+  } catch (error) {
+    console.error(`[LLM] Failed to generate category digest for ${category}:`, error)
+    throw error
+  }
+}
+
+/**
+ * Generate push summary from digest content
+ * @param digestContent Full digest content
+ * @returns Push summary (300-500 chars)
+ */
+export async function generatePushSummary(
+  digestContent: string
+): Promise<string> {
+  const systemPrompt = `你是一位专业的科技财经编辑。请根据以下汇总文章生成一段推送摘要。
+
+要求：
+1. 对整篇文章进行高度概括，不要按分类分别描述
+2. 突出当天最重要的 2-3 条核心新闻
+3. 语言简洁，适合快速阅读
+4. 总字数控制在 300-500 字
+5. 使用 Markdown 格式输出`
+
+  const userPrompt = `汇总文章:\n${digestContent}\n\n请生成推送摘要：`
+
+  try {
+    const result = await callLLM([
+      { role: "system", content: systemPrompt },
+      { role: "user", content: userPrompt },
+    ])
+
+    return result.trim()
+  } catch (error) {
+    console.error("[LLM] Failed to generate push summary:", error)
+    throw error
+  }
 }

@@ -1,0 +1,91 @@
+{
+  "name": "bumpp",
+  "type": "module",
+  "version": "10.4.1",
+  "description": "Bump version, commit changes, tag, and push to Git",
+  "authors": [
+    {
+      "name": "Anthony Fu",
+      "url": "https://antfu.me"
+    },
+    {
+      "name": "James Messinger",
+      "url": "https://jamesmessinger.com"
+    }
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/antfu-collective/bumpp",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/antfu-collective/bumpp.git"
+  },
+  "keywords": [
+    "version",
+    "bump",
+    "npm",
+    "node",
+    "bower",
+    "package",
+    "git",
+    "tag",
+    "push",
+    "prompt"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.mjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
+  "bin": {
+    "bumpp": "bin/bumpp.mjs"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ansis": "^4.2.0",
+    "args-tokenizer": "^0.3.0",
+    "c12": "^3.3.3",
+    "cac": "^6.7.14",
+    "escalade": "^3.2.0",
+    "jsonc-parser": "^3.3.1",
+    "package-manager-detector": "^1.6.0",
+    "semver": "^7.7.3",
+    "tinyexec": "^1.0.2",
+    "tinyglobby": "^0.2.15",
+    "yaml": "^2.8.2"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^7.2.0",
+    "@types/node": "^25.2.0",
+    "@types/prompts": "^2.4.9",
+    "@types/semver": "^7.7.1",
+    "baseline-browser-mapping": "^2.9.19",
+    "eslint": "^9.39.2",
+    "prompts": "^2.4.2",
+    "rimraf": "^6.1.2",
+    "tiny-conventional-commits-parser": "^0.1.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "unbuild": "^3.6.1",
+    "vitest": "^4.0.18"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "build": "unbuild",
+    "stub": "unbuild --stub",
+    "start": "tsx src/cli/run.ts",
+    "test": "vitest",
+    "bumpp": "tsx src/cli/run.ts",
+    "release": "pnpm run bumpp",
+    "typecheck": "tsc --noEmit"
+  }
+}

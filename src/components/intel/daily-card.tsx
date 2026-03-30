@@ -46,11 +46,6 @@ export function DailyCard({ group }: DailyCardProps) {
                       {item.aiScore}分
                     </span>
                   </h4>
-                  {item.aiSummary && (
-                    <p className="news-summary text-sm text-neutral-600 dark:text-neutral-400 mt-1 line-clamp-2">
-                      {item.aiSummary}
-                    </p>
-                  )}
                   {item.extra?.info && (
                     <div className="news-meta text-xs text-neutral-500 dark:text-neutral-500 mt-2 flex gap-2">
                       <span>来源：{item.extra.info}</span>

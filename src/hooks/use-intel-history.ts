@@ -20,9 +20,8 @@ export interface IntelNewsItem {
     date?: number
   }
   aiScore: number
-  aiSummary?: string
-  aiComment?: string
   aiCategory?: AICategory
+  articleContent?: string
 }
 
 export type AICategory = "AI动态" | "财经市场" | "全球视点"

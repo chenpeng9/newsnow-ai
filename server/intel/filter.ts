@@ -1,4 +1,4 @@
-import type { NewsItem } from "~/shared/types"
+import type { NewsItem } from "@shared/types"
 import { heuristicFilter } from "./filter-l1"
 import { deduplicate, filterByTimeWindow } from "./filter-l2"
 import { scoreItems, getHighValueItems, type ScoredItem, type AICategory } from "./filter-l3"

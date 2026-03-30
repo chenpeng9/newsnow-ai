@@ -13,7 +13,6 @@ export const intelCategories = {
       // Financial - Core
       "wallstreetcn-hot", // 华尔街见闻 - 热门
       "cls-depth",       // 财联社 - 深度
-      "thepaper",       // 澎湃新闻
       "sputniknewscn",  // 卫星通讯社
     ],
   },
@@ -31,6 +30,7 @@ export const intelCategories = {
       "juejin",         // 稀土掘金
       "tencent-hot",    // 腾讯新闻
       "ifeng",          // 凤凰网
+      "thepaper",       // 澎湃新闻
     ],
   },
   C: {

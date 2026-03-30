@@ -1,4 +1,4 @@
-import type { NewsItem } from "~/shared/types"
+import type { NewsItem } from "@shared/types"
 
 // Hard blocked keywords - news containing these will be filtered out
 // unless they also contain an AI-related keyword
