@@ -197,10 +197,12 @@ function DigestDetailComponent() {
                                 rel="noopener noreferrer"
                                 className="flex-1 min-w-0"
                               >
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="flex-1 text-neutral-700 dark:text-neutral-300">
-                                    {item.title}
-                                  </span>
+                                {/* 标题单独一行 */}
+                                <div className="text-neutral-700 dark:text-neutral-300">
+                                  {item.title}
+                                </div>
+                                {/* 评分、来源、日期单独一行 */}
+                                <div className="flex items-center gap-2 flex-wrap mt-1">
                                   <span className="text-xs font-mono text-primary shrink-0">
                                     {item.aiScore}
                                     分
