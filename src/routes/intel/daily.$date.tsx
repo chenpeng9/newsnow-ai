@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { Link, createFileRoute } from "@tanstack/react-router"
 import { useIntelDaily } from "~/hooks/use-intel-history"
 
 export const Route = createFileRoute("/intel/daily/$date")({
@@ -65,13 +65,21 @@ function DailyComponent() {
           {/* Stats */}
           <div className="mb-6 px-4 py-3 rounded-lg bg-zinc-100 dark:bg-zinc-800">
             <div className="text-sm text-neutral-600 dark:text-neutral-400">
-              从 {data.stats.total} 条资讯中筛选 · {data.stats.sourceCount} 个渠道
+              从
+              {" "}
+              {data.stats.total}
+              {" "}
+              条资讯中筛选 ·
+              {" "}
+              {data.stats.sourceCount}
+              {" "}
+              个渠道
             </div>
           </div>
 
           {/* Categories */}
           <div className="space-y-8">
-            {categoryOrder.map(category => {
+            {categoryOrder.map((category) => {
               const items = data.categories[category]
               if (!items || items.length === 0) return null
 
@@ -81,7 +89,9 @@ function DailyComponent() {
                     <span>{categoryIcons[category]}</span>
                     <span>{category}</span>
                     <span className="text-sm font-normal text-neutral-500 dark:text-neutral-500">
-                      ({items.length}条)
+                      (
+                      {items.length}
+                      条)
                     </span>
                   </h2>
 
@@ -101,13 +111,17 @@ function DailyComponent() {
                             <h3 className="font-semibold text-base text-neutral-800 dark:text-neutral-200 flex items-center gap-2 mb-2">
                               <span className="flex-1">{item.title}</span>
                               <span className="text-xs font-mono text-primary shrink-0">
-                                {item.aiScore}分
+                                {item.aiScore}
+                                分
                               </span>
                             </h3>
 
                             <div className="text-xs text-neutral-500 dark:text-neutral-500 flex gap-2">
                               {item.extra?.info && (
-                                <span>来源：{item.extra.info}</span>
+                                <span>
+                                  来源：
+                                  {item.extra.info}
+                                </span>
                               )}
                               {item.pubDate && (
                                 <>

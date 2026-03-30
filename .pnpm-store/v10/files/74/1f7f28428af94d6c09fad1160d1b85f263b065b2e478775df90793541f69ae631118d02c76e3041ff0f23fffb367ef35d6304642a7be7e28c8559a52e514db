@@ -1,0 +1,41 @@
+{
+  "name": "@napi-rs/pinyin-linux-arm64-musl",
+  "version": "1.7.7",
+  "cpu": [
+    "arm64"
+  ],
+  "main": "pinyin.linux-arm64-musl.node",
+  "files": [
+    "pinyin.linux-arm64-musl.node"
+  ],
+  "description": "Fastest Chinese words to pinyin library",
+  "keywords": [
+    "napi-rs",
+    "NAPI",
+    "N-API",
+    "Rust",
+    "node-addon",
+    "node-addon-api",
+    "pinyin",
+    "jieba",
+    "拼音",
+    "汉语",
+    "汉字",
+    "中文"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10.0"
+  },
+  "repository": "git@github.com:Brooooooklyn/pinyin.git",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "os": [
+    "linux"
+  ],
+  "libc": [
+    "musl"
+  ]
+}

@@ -43,16 +43,24 @@ export function DailyCard({ group }: DailyCardProps) {
                   <h4 className="news-title font-semibold text-base text-neutral-800 dark:text-neutral-200 flex items-center gap-2">
                     <span className="flex-1 truncate">{item.title}</span>
                     <span className="text-xs font-mono text-primary shrink-0">
-                      {item.aiScore}分
+                      {item.aiScore}
+                      分
                     </span>
                   </h4>
                   {item.extra?.info && (
                     <div className="news-meta text-xs text-neutral-500 dark:text-neutral-500 mt-2 flex gap-2">
-                      <span>来源：{item.extra.info}</span>
+                      <span>
+                        来源：
+                        {item.extra.info}
+                      </span>
                       {item.aiCategory && (
                         <>
                           <span>·</span>
-                          <span>{categoryIcons[item.aiCategory] || ""} {item.aiCategory}</span>
+                          <span>
+                            {categoryIcons[item.aiCategory] || ""}
+                            {" "}
+                            {item.aiCategory}
+                          </span>
                         </>
                       )}
                     </div>
@@ -66,7 +74,15 @@ export function DailyCard({ group }: DailyCardProps) {
 
       <div className="mt-4 pt-4 border-t border-zinc-100 dark:border-zinc-900">
         <div className="flex items-center justify-between text-xs text-neutral-500 dark:text-neutral-500">
-          <span>从 {stats.total} 条资讯中筛选 · {stats.sourceCount} 个渠道</span>
+          <span>
+            从
+            {stats.total}
+            {" "}
+            条资讯中筛选 ·
+            {stats.sourceCount}
+            {" "}
+            个渠道
+          </span>
           <Link
             to="/intel/daily/$date"
             params={{ date }}

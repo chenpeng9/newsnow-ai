@@ -15,7 +15,7 @@ export interface Digest {
       aiCategory?: string
       articleContent?: string
       pubDate?: number
-      extra?: { info?: string; date?: number }
+      extra?: { info?: string, date?: number }
     }>
     财经市场?: Array<{
       id: string
@@ -25,7 +25,7 @@ export interface Digest {
       aiCategory?: string
       articleContent?: string
       pubDate?: number
-      extra?: { info?: string; date?: number }
+      extra?: { info?: string, date?: number }
     }>
     全球视点?: Array<{
       id: string
@@ -35,7 +35,7 @@ export interface Digest {
       aiCategory?: string
       articleContent?: string
       pubDate?: number
-      extra?: { info?: string; date?: number }
+      extra?: { info?: string, date?: number }
     }>
   }
   createdAt: number
@@ -72,7 +72,9 @@ export function DigestCard({ digest }: DigestCardProps) {
     >
       <div className="flex items-center gap-3 mb-3">
         <h3 className="text-xl font-bold text-neutral-900 dark:text-neutral-100">
-          📰 {formattedDate}
+          📰
+          {" "}
+          {formattedDate}
         </h3>
       </div>
 
@@ -88,19 +90,28 @@ export function DigestCard({ digest }: DigestCardProps) {
         {aiCount > 0 && (
           <span className="flex items-center gap-1">
             <span>{categoryIcons["AI动态"]}</span>
-            <span>AI动态 {aiCount}</span>
+            <span>
+              AI动态
+              {aiCount}
+            </span>
           </span>
         )}
         {financeCount > 0 && (
           <span className="flex items-center gap-1">
             <span>{categoryIcons["财经市场"]}</span>
-            <span>财经市场 {financeCount}</span>
+            <span>
+              财经市场
+              {financeCount}
+            </span>
           </span>
         )}
         {globalCount > 0 && (
           <span className="flex items-center gap-1">
             <span>{categoryIcons["全球视点"]}</span>
-            <span>全球视点 {globalCount}</span>
+            <span>
+              全球视点
+              {globalCount}
+            </span>
           </span>
         )}
       </div>

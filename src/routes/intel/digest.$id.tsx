@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { Link, createFileRoute } from "@tanstack/react-router"
 import { useEffect, useState } from "react"
 import type { Digest } from "~/components/intel/digest-card"
 
@@ -51,7 +51,7 @@ function DigestDetailComponent() {
   const categoryOrder: Array<"AI动态" | "财经市场" | "全球视点"> = ["AI动态", "财经市场", "全球视点"]
 
   // Render markdown content (simple implementation)
-  const renderMarkdown = (content: string, items: Digest['categories']['AI动态']) => {
+  const renderMarkdown = (content: string, items: Digest["categories"]["AI动态"]) => {
     // Build a map of index to URL for linking
     const allItems = [
       ...(items?.AI动态 || []),
@@ -64,28 +64,28 @@ function DigestDetailComponent() {
     })
 
     // Convert markdown headers to HTML
-    let html = content
-      .replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold mt-6 mb-3 text-neutral-900 dark:text-neutral-100">$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold mt-8 mb-4 text-neutral-900 dark:text-neutral-100">$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold mt-6 mb-4 text-neutral-900 dark:text-neutral-100">$1</h1>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong class="font-semibold">$1</strong>')
+    const html = content
+      .replace(/^### (.+)$/gm, "<h3 class=\"text-lg font-bold mt-6 mb-3 text-neutral-900 dark:text-neutral-100\">$1</h3>")
+      .replace(/^## (.+)$/gm, "<h2 class=\"text-xl font-bold mt-8 mb-4 text-neutral-900 dark:text-neutral-100\">$1</h2>")
+      .replace(/^# (.+)$/gm, "<h1 class=\"text-2xl font-bold mt-6 mb-4 text-neutral-900 dark:text-neutral-100\">$1</h1>")
+      .replace(/\*\*(.+?)\*\*/g, "<strong class=\"font-semibold\">$1</strong>")
       // Convert [1] to clickable links
       .replace(/\[(\d+)\]/g, (_, num) => {
-        const index = parseInt(num, 10)
+        const index = Number.parseInt(num, 10)
         const url = indexToUrl[index]
         if (url) {
           return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="text-xs text-primary hover:underline font-mono">[${num}]</a>`
         }
         return `<sup class="text-xs text-primary">[${num}]</sup>`
       })
-      .replace(/\n\n/g, '</p><p class="my-3 text-neutral-700 dark:text-neutral-300">')
-      .replace(/\n/g, '<br />')
+      .replace(/\n\n/g, "</p><p class=\"my-3 text-neutral-700 dark:text-neutral-300\">")
+      .replace(/\n/g, "<br />")
 
     return <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: `<p>${html}</p>` }} />
   }
 
   // Format publish date
-  const formatPublishDate = (item: Digest['categories']['AI动态'][0]) => {
+  const formatPublishDate = (item: Digest["categories"]["AI动态"][0]) => {
     // Try pubDate first, then fall back to extra.date
     const timestamp = item.pubDate || item.extra?.date
     if (!timestamp) return ""
@@ -113,7 +113,11 @@ function DigestDetailComponent() {
           ← 返回
         </Link>
         <h1 className="text-2xl font-bold text-neutral-900 dark:text-neutral-100 flex-1">
-          📰 {formattedDate} AI 情报汇总
+          📰
+          {" "}
+          {formattedDate}
+          {" "}
+          AI 情报汇总
         </h1>
       </div>
 
@@ -149,7 +153,7 @@ function DigestDetailComponent() {
               </h2>
 
               <div className="space-y-4">
-                {categoryOrder.map(category => {
+                {categoryOrder.map((category) => {
                   const items = digest.categories[category]
                   if (!items || items.length === 0) return null
 
@@ -183,7 +187,9 @@ function DigestDetailComponent() {
                                 rel="noopener noreferrer"
                                 className="text-xs font-mono text-primary hover:underline shrink-0 w-6 pt-0.5"
                               >
-                                [{globalIndex}]
+                                [
+                                {globalIndex}
+                                ]
                               </a>
                               <a
                                 href={item.url}
@@ -196,7 +202,8 @@ function DigestDetailComponent() {
                                     {item.title}
                                   </span>
                                   <span className="text-xs font-mono text-primary shrink-0">
-                                    {item.aiScore}分
+                                    {item.aiScore}
+                                    分
                                   </span>
                                   {item.extra?.info && (
                                     <span className="text-xs text-blue-500 dark:text-blue-400 shrink-0">
