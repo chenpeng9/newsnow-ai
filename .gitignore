@@ -13,4 +13,5 @@ dev-dist
 wrangler.toml
 imports.app.d.ts
 package-lock.json
+.pnpm-store
 .specstory/.pnpm-store
